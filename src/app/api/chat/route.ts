@@ -1,9 +1,8 @@
-import { NextResponse } from "next/server";
 import { OpenAI } from "openai";
 
 // Initialize the OpenAI client
 const openai = new OpenAI({
-  apiKey: "your-api-key-here", // Replace with your actual OpenAI API key
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Example function to call the OpenAI API
