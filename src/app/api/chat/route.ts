@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { OpenAI } from "openai"; // Import the OpenAI class
+import { NextResponse } from "next/server";
+import { OpenAI } from "openai";
 
 // Initialize the OpenAI client
 const openai = new OpenAI({

@@ -35,8 +35,9 @@ export default function Home() {
       if (!data.choices || !data.choices[0]) {
         throw new Error("Invalid response format from API");
       }
-    } catch (err: any) {
-      setError(err.message || "Something went wrong.");
+    } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Something went wrong.");
+
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -47,7 +48,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gradient-to-r from-pink-100 to-purple-200 dark:from-gray-900 dark:to-gray-800">
       {/* Title */}
       <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-        👗 Hi, I'm your <span className="text-pink-600">StyleBot</span> ❤👌
+        👗 Hi, I&apos;m your <span className="text-pink-600">StyleBot</span> ❤👌
       </h1>
 
       {/* Chat Form */}

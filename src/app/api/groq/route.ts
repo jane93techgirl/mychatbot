@@ -8,40 +8,33 @@ const groq = new Groq({
 
 export async function POST(req: Request) {
   try {
-    console.log("Received API request");
+    console.log("Received request:", req);
     const { messages } = await req.json();
-    console.log("Request payload:", { messages });
+    console.log("Parsed messages:", messages);
 
     if (!messages) {
-      console.error("Missing messages in request");
+      console.error("No messages provided");
       return NextResponse.json(
         { error: "Messages are required" },
         { status: 400 }
       );
     }
 
-    console.log("Calling Groq API...");
+    console.log("Calling Groq API with messages:", messages);
     const response = await groq.chat.completions.create({
       messages,
       model: "mixtral-8x7b-32768",
     });
-    console.log("Groq API response:", response);
+    console.log("Received response from Groq API:", response);
 
     return NextResponse.json(response);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error calling Groq API:", error);
-    if (error instanceof Error) {
-      console.error("Error details:", {
-        message: error.message,
-        stack: error.stack
-      });
-    }
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
     return NextResponse.json(
-      { 
-        error: "Failed to process request",
-        details: error instanceof Error ? error.message : "Unknown error"
-      },
+      { error: "Failed to process request", details: errorMessage },
       { status: 500 }
     );
   }
+
 }
