@@ -14,7 +14,7 @@ export default function Home() {
     setError("");
 
     try {
-      const res = await fetch('/api/openai', {
+      const res = await fetch('/api/groq', {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
