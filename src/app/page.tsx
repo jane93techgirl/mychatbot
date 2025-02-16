@@ -14,12 +14,16 @@ export default function Home() {
     setError("");
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch('/api/groq', {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({ prompt: inputValue }),
+        body: JSON.stringify({
+          messages: [
+            { role: "user", content: inputValue }
+          ]
+        }),
       });
 
       if (!res.ok) {
@@ -27,7 +31,10 @@ export default function Home() {
       }
 
       const data = await res.json();
-      setResponse(data.response);
+      setResponse(data.choices[0].message.content || "Received response");
+      if (!data.choices || !data.choices[0]) {
+        throw new Error("Invalid response format from API");
+      }
     } catch (err: any) {
       setError(err.message || "Something went wrong.");
       console.error(err);

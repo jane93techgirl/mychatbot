@@ -1,55 +1,30 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { OpenAI } from "openai"; // Import the OpenAI class
 
-// Define the type for the request object
-interface RequestBody {
-  name: string;
-  age: number;
-}
+// Initialize the OpenAI client
+const openai = new OpenAI({
+  apiKey: "your-api-key-here", // Replace with your actual OpenAI API key
+});
 
-// Define the type for the response object
-interface ResponseBody {
-  message: string;
-  data?: {
-    name: string;
-    age: number;
-  };
-}
-
-// Handle GET requests
-export async function GET() {
-  return NextResponse.json({ message: "Hello, World!" });
-}
-
-// Handle POST requests
-export async function POST(request: Request) {
+// Example function to call the OpenAI API
+async function callOpenAI() {
   try {
-    // Parse the request body
-    const body: RequestBody = await request.json();
+    // Make a request to the OpenAI API
+    const response = await openai.chat.completions.create({
+      model: "gpt-4", // Specify the model you want to use
+      messages: [
+        { role: "system", content: "You are a helpful assistant." },
+        { role: "user", content: "Hello, world!" },
+      ],
+    });
 
-    // Validate the request body
-    if (!body.name || !body.age) {
-      return NextResponse.json(
-        { message: "Name and age are required" },
-        { status: 400 }
-      );
-    }
-
-    // Prepare the response
-    const response: ResponseBody = {
-      message: "Data received successfully",
-      data: {
-        name: body.name,
-        age: body.age,
-      },
-    };
-
-    // Return the response
-    return NextResponse.json(response, { status: 200 });
+    // Log the response from the API
+    console.log(response.choices[0].message.content);
   } catch (error) {
-    console.error("Error in POST request:", error);
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
+    // Handle any errors
+    console.error("Error calling OpenAI API:", error);
   }
 }
+
+// Call the function to execute the API request
+callOpenAI();
